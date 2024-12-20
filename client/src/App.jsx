@@ -11,7 +11,7 @@ import Login from './components/Login'
 import Home from './Pages/Home';
 import Marktplatz from './Pages/Marktplatz'
 import Inventar from './Pages/Inventar'
-
+import Monsters from "./Pages/Monsters"
 
 function App() {
 
@@ -27,6 +27,7 @@ function App() {
           <Route path="/" exact element={<Home />} />
           <Route path="/markt" element={<Marktplatz />} />
           <Route path="/inventar" element={<Inventar />} />
+          <Route path='/monsters' element={<Monsters/>} />
         </Routes>
     </Router>
 

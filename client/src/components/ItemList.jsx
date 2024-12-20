@@ -72,6 +72,18 @@ const ItemsList = () => {
     filterItems();
   };
 
+  const deleteItem = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/items/${id}`);
+      const updatedItems = items.filter((item) => item._id !== id);
+      setItems(updatedItems);
+      setFilteredItems(updatedItems);
+      console.log(`Item with ID ${id} deleted successfully.`);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  };
+
   // Zurücksetzen-Funktion
   const resetFilters = () => {
     setFilterName(""); 
@@ -128,10 +140,11 @@ const ItemsList = () => {
       <ul>
         {filteredItems.map((item) => (
           <li key={item._id} className="text-black">
-            <h3>{item.name}</h3>
+            <h3>{item.name}, {item._id}</h3>
             <p>{item.description}</p>
             <p>Preis: {item.price} Gold</p>
             <p>Seltenheit: {item.rarity}</p>
+            <button onClick={() => deleteItem(item._id)}>LÖSCHEN</button>
           </li>
         ))}
       </ul>

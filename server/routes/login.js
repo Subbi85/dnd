@@ -10,8 +10,6 @@ router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    console.log(username)
-
     // Überprüfen, ob der Benutzer existiert
     const user = await User.findOne({ username });
     if (!user) {

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/Users");
+const mongoose = require("mongoose");
 
 // Neue Benutzer anlegen
 router.post("/", async (req, res) => {
@@ -16,7 +17,7 @@ router.post("/", async (req, res) => {
       // Einen neuen Benutzer erstellen
       const newUser = new User({
         username,
-        password, // Das Passwort wird direkt gespeichert, es wird aber vorher gehasht
+        password, 
         gold: gold || 100,
         inventory: inventory || [],
         role: role || 'player'
@@ -42,6 +43,26 @@ router.get("/", async (req, res) => {
       console.error(err);
       res.status(500).json({ error: "Fehler beim Abrufen der Benutzer" });
     }
+});
+
+// Nutzer löschen
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Ungültige ID" });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      return res.status(404).json({ error: "User nicht gefunden" });
+    }
+
+    res.json({ message: "User wurde gelöscht", deletedUser });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Spielerinventar abrufen
@@ -75,7 +96,5 @@ router.post("/:id/buy", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-
 
 module.exports = router;
