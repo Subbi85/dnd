@@ -2,7 +2,12 @@ import React from 'react'
 
 const Monsters = () => {
   return (
-    <div>Monsters</div>
+    <>
+    <div className="container mx-auto">
+      <div>Monsters</div>
+    </div>
+    </>
+    
   )
 }
 

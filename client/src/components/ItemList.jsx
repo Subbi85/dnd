@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+//Components
+import ItemCard from "../ItemCard";
+import ShopSummary from "./ShopSummary";
+
 const ItemsList = () => {
   const [items, setItems] = useState([]); 
   const [filteredItems, setFilteredItems] = useState([]); 
@@ -72,17 +76,7 @@ const ItemsList = () => {
     filterItems();
   };
 
-  const deleteItem = async (id) => {
-    try {
-      await axios.delete(`http://localhost:4000/api/items/${id}`);
-      const updatedItems = items.filter((item) => item._id !== id);
-      setItems(updatedItems);
-      setFilteredItems(updatedItems);
-      console.log(`Item with ID ${id} deleted successfully.`);
-    } catch (error) {
-      console.error("Error deleting item:", error);
-    }
-  };
+
 
   // Zurücksetzen-Funktion
   const resetFilters = () => {
@@ -101,54 +95,22 @@ const ItemsList = () => {
   }
 
   return (
-    <div className="items-list">
-      {/* Filtereingaben */}
-      <div className="filters">
-        <div>
-          <label>Name:</label>
-          <input
-            type="text"
-            placeholder="Name filtern"
-            value={filterName}
-            onChange={(e) => handleFilterChange(e, "name")}
-          />
-        </div>
-        <div>
-          <label>Seltenheit:</label>
-          <select
-            value={filterRarity}
-            onChange={(e) => handleFilterChange(e, "rarity")}
-          >
-            <option value="">Alle</option>
-            <option value="common">Common</option>
-            <option value="rare">Rare</option>
-            <option value="legendary">Legendary</option>
-          </select>
-        </div>
-        <div>
-          <label>Maximaler Preis (Gold):</label>
-          <input
-            type="number"
-            placeholder="Maximaler Preis"
-            value={filterPrice}
-            onChange={(e) => handleFilterChange(e, "price")}
-          />
-        </div>
-        <button onClick={resetFilters}>Filter zurücksetzen</button>
-      </div>
+    <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+      <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">Annas Arcaneum</h2>
+        <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
+          <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-4xl">
+            <div className="space-y-6">
+            {filteredItems.map((item) => (
+              <ItemCard item={item}/>
+            ))}
+            </div>
+          </div>
 
-      <ul>
-        {filteredItems.map((item) => (
-          <li key={item._id} className="text-black">
-            <h3>{item.name}, {item._id}</h3>
-            <p>{item.description}</p>
-            <p>Preis: {item.price} Gold</p>
-            <p>Seltenheit: {item.rarity}</p>
-            <button onClick={() => deleteItem(item._id)}>LÖSCHEN</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+              <ShopSummary />
+        </div>
+      </div>
+    </section>
   );
 };
 

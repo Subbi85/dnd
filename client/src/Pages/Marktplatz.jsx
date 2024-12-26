@@ -7,9 +7,10 @@ import SearchItemForm from '../components/Forms/SearchItemForm'
 const Marktplatz = () => {
   return (
     <>
-    <div>Marktplatz</div>
+    <div className="container mx-auto">
       <ItemsList />
       <SearchItemForm />
+    </div>
     </>
   )
 }

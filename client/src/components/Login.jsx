@@ -1,70 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Fehlernachricht anzeigen
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loggedInUser, setLoggedInUser] = useState(null); 
 
-
-  // Funktion, um den Login zu handhaben
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    console.log("Gefundene Daten in localStorage:", userData);
+  
+    if (userData) {
+      try {
+        const parsedData = JSON.parse(userData);
+        console.log("Parsed userData:", parsedData);
+        setLoggedInUser(parsedData);
+      } catch (err) {
+        console.error("Fehler beim Parsen von userData:", err);
+      }
+    }
+  }, []);
+  
   const handleLogin = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
+  
+    if (!username || !password) {
+      setErrorMessage("Benutzername und Passwort sind erforderlich.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post("http://localhost:4000/api/login", {
+        username,
+        password,
+      });
+      const userData = response.data;
+      console.log("API Antwort:", userData);
+      localStorage.setItem("userData", JSON.stringify(userData));
+      setLoggedInUser(userData);
+    } catch (err) {
+      console.error("Login Error:", err);
+      setErrorMessage("Ungültiger Benutzername oder Passwort.");
+    }
+  };
+  
 
-    console.log(username, password)
-
-        // Sicherstellen, dass die Felder nicht leer sind
-        if (!username || !password) {
-          setErrorMessage("Benutzername und Passwort sind erforderlich.");
-          return;
-        }
-
-        try {
-          // POST-Anfrage an den Login-API-Endpunkt
-          const response = await axios.post("http://localhost:4000/api/login", {
-            username,
-            password,
-          });
-    
-          // Wenn Login erfolgreich ist, Token speichern
-          localStorage.setItem("token", response.data.token);
-    
-        } catch (err) {
-          console.error(err);
-          setErrorMessage("Ungültiger Benutzername oder Passwort.");
-        }
+  // Funktion für Logout
+  const handleLogout = () => {
+    localStorage.removeItem("userData"); 
+    setLoggedInUser(null);
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleLogin}>
+    <div>
+      {loggedInUser ? (
         <div>
-          <label htmlFor="username">Benutzername</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+          <p>Willkommen, {loggedInUser.username}!</p>
+          {/* Du kannst hier weitere Eigenschaften von loggedInUser verwenden */}
+          <button onClick={handleLogout}>Logout</button>
         </div>
-
-        <div>
-          <label htmlFor="password">Passwort</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        {errorMessage && <p className="error">{errorMessage}</p>}
-
-        <button type="submit">Login</button>
-      </form>
+      ) : (
+        <form onSubmit={handleLogin}>
+          <div>
+            <label>Benutzername:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div>
+            <label>Passwort:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+          <button type="submit">Login</button>
+        </form>
+      )}
     </div>
   );
 };

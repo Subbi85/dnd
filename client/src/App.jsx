@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 //Components
 import Navbar from './components/Navbar'
-import Login from './components/Login'
 
 //Pages
 import Home from './Pages/Home';
@@ -19,7 +18,6 @@ function App() {
 
   return (
     <>
-    <h1>DnD Marktplatz</h1>
     
     <Router>
       <Navbar />

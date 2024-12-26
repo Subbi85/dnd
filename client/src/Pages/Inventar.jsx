@@ -5,7 +5,10 @@ import React from 'react'
 const Inventar = () => {
   return (
     <>
-    <div>Inventar</div>
+    <div className="container mx-auto">
+          <div>Inventar</div>
+    </div>
+
     </>
   )
 }

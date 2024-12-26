@@ -12,14 +12,24 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Neuen Gegenstand hinzufügen (Admin)
+//Neues Item in den Shop
 router.post("/", async (req, res) => {
   try {
+
+    if (Array.isArray(req.body.desc)) {
+      req.body.desc = req.body.desc.slice(1).join("\n");
+    }
+
+    if (typeof req.body.rarity === "object" && req.body.rarity.name) {
+      req.body.rarity = req.body.rarity.name;
+    }
+
     const newItem = new Item(req.body);
     const savedItem = await newItem.save();
+
     res.status(201).json(savedItem);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Fehler beim Speichern:", err);
   }
 });
 
@@ -64,7 +74,6 @@ router.patch("/:id/price/:price", async (req, res) => {
   }
 });
 
-
 //Itemanzahl ändern
 router.patch("/:id/stock/:stock", async (req, res) => {
   try {
@@ -92,6 +101,5 @@ router.patch("/:id/stock/:stock", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
 
 module.exports = router;
