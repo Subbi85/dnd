@@ -1,4 +1,5 @@
 Phase 1: Planung und Setup
+~~
 •	 Projektstruktur festlegen
 o	MERN-Stack verwenden (MongoDB, Express, React, Node.js).
 o	Discord.js für Bot-Integration einplanen.
@@ -9,6 +10,7 @@ o	Discord-Bot mit Grundbefehlen starten (discord.js).
 •	 Grundlegende Anforderungen definieren
 o	Welche Features braucht der Marktplatz?
 o	Spieler- und DM-Funktionen aufschreiben.
+~~
 ________________________________________
 Phase 2: Backend-Entwicklung
 •	 Datenbankstruktur erstellen (MongoDB):

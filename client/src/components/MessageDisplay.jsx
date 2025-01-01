@@ -38,7 +38,7 @@ const MessageDisplay = () => {
     <>
     <div className="w-full flex flex-row">
         {messages.map((message, index) => (
-            <MessageCard message={message} index={index} />
+            <MessageCard key={index} message={message} index={index} />
         ))}
     </div>
     </>

@@ -14,14 +14,22 @@ router.get("/", async (req, res) => {
 
 //Neues Item in den Shop
 router.post("/", async (req, res) => {
+  var category = "";
   try {
 
     if (Array.isArray(req.body.desc)) {
+      category = req.body.desc[0]
       req.body.desc = req.body.desc.slice(1).join("\n");
     }
 
     if (typeof req.body.rarity === "object" && req.body.rarity.name) {
       req.body.rarity = req.body.rarity.name;
+    }
+
+    if (category) {
+      category = category.split(",")[0]; 
+      category = category.replace(/\s?\(.*\)/, ""); 
+      req.body.category = category;
     }
 
     const newItem = new Item(req.body);
