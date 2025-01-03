@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineDelete } from "react-icons/ai";
 
 
@@ -7,13 +7,18 @@ const ShopSummary = ({ shoppingCardItems, setShoppingCardItems }) => {
   const [gold, setGold] = useState(100000);
   const rest = gold - totalPrice;
 
+  //Item aus dem Warenkorb entfernen
   const deleteFromShoppingCard = (itemToRemove) => {
     setShoppingCardItems((prevItems) =>
       prevItems.filter((item) => item !== itemToRemove)
     );
   };
 
-  const handlePayment = () => {
+  useEffect(() => { }, []);
+
+  //Kauf eines Items
+  const handlePayment = (data) => {
+    console.log(data);
     if (rest >= 0) {
       setGold(rest);
       setShoppingCardItems([]);
@@ -30,7 +35,7 @@ const ShopSummary = ({ shoppingCardItems, setShoppingCardItems }) => {
           {shoppingCardItems.map((item, index) => (
             <dl key={index} className="flex items-center justify-between gap-4">
               <dt className="text-base font-normal text-gray-500 dark:text-gray-400">{item.name}</dt>
-              <dd className="text-base font-medium text-gray-900 dark:text-white">{item.price} G</dd>
+              <dd className="text-base font-medium text-gray-900 dark:text-white">{item.price.toLocaleString('de-DE')} G</dd>
               <button
                 onClick={() => deleteFromShoppingCard(item)}
                 className="text-sm font-medium text-red-600 hover:underline dark:text-red-400"
@@ -64,7 +69,7 @@ const ShopSummary = ({ shoppingCardItems, setShoppingCardItems }) => {
           </dl>
         </div>
         <button
-          onClick={handlePayment}
+          onClick={()=>handlePayment(shoppingCardItems)}
           disabled={rest < 0}
           className={`flex w-full items-center justify-center rounded-lg ${
             rest < 0

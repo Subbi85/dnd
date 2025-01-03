@@ -10,7 +10,7 @@ import Navbar from './components/Navbar'
 import Home from './Pages/Home';
 import Marktplatz from './Pages/Marktplatz'
 import Inventar from './Pages/Inventar'
-import Monsters from "./Pages/Monsters"
+import Kompendium from "./Pages/Kompendium"
 
 function App() {
 
@@ -25,7 +25,7 @@ function App() {
           <Route path="/" exact element={<Home />} />
           <Route path="/markt" element={<Marktplatz />} />
           <Route path="/inventar" element={<Inventar />} />
-          <Route path='/monsters' element={<Monsters/>} />
+          <Route path='/kompendium' element={<Kompendium/>} />
         </Routes>
     </Router>
 

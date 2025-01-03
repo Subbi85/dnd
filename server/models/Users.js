@@ -2,14 +2,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
+  userId: { type: Number, required: true, unique: true },
   username: { type: String, required: true, unique: true },
-  gold: { type: Number, default: 100 },
-  inventory: [
-    {
-      item: { type: mongoose.Schema.Types.ObjectId, ref: "Item" },
-      quantity: { type: Number, default: 1 },
-    },
-  ],
   role: { 
     type: String, 
     enum: ['player', 'dm'], 

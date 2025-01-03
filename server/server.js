@@ -7,6 +7,7 @@ const itemRoutes = require("./routes/items")
 const userRoutes = require("./routes/users")
 const loginRoutes = require("./routes/login")
 const messageRoutes = require("./routes/messages")
+const characterRoutes = require("./routes/characters")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +20,7 @@ app.use("/api/items", itemRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/login", loginRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/characters", characterRoutes);
 
 // MongoDB-Verbindung
 mongoose

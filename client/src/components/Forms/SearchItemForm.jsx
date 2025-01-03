@@ -142,38 +142,47 @@ const MagicItemSearch = () => {
                   <label htmlFor="floating_email" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Itemsuche</label>
                 </div>
 
-                {selectedItem && 
-                  <>
-                    <p><strong>Name:</strong> {selectedItem.name}</p>
-                    <ul>
-                      <p><strong>Description:</strong></p>{selectedItem.desc}
-                      <p><strong>Seltenheit:</strong></p>{selectedItem.rarity.name}
-                      <p>{selectedItem.id}</p>
-                    </ul>
+                {selectedItem && (
+                <>
+                  <p><strong>Name:</strong> {selectedItem.name}</p>
+                  <ul>
+                    <p><strong>Description:</strong></p>{selectedItem.desc}
+                    <p><strong>Seltenheit:</strong></p>{selectedItem.rarity.name}
+                    <p>{selectedItem.id}</p>
+                  </ul>
 
-                    <div style={{ marginBottom: "10px" }}>
-                      <label>Price: </label>
-                      <input 
-                        type="number" 
-                        value={price} 
-                        onChange={(e) => setPrice(e.target.value)} 
-                        style={{ marginLeft: "5px" }} 
-                      />
-                    </div>
+                  {selectedItem.url.endsWith('/markt') && (
+                    <>
+                      <div style={{ marginBottom: "10px" }}>
+                        <label>Price: </label>
+                        <input 
+                          type="number" 
+                          value={price} 
+                          onChange={(e) => setPrice(e.target.value)} 
+                          style={{ marginLeft: "5px" }} 
+                        />
+                      </div>
 
-                    <div style={{ marginBottom: "10px" }}>
-                      <label>Stock: </label>
-                      <input 
-                        type="number" 
-                        value={stock} 
-                        onChange={(e) => setStock(e.target.value)} 
-                        style={{ marginLeft: "5px" }} 
-                      />
-                    </div>
+                      <div style={{ marginBottom: "10px" }}>
+                        <label>Stock: </label>
+                        <input 
+                          type="number" 
+                          value={stock} 
+                          onChange={(e) => setStock(e.target.value)} 
+                          style={{ marginLeft: "5px" }} 
+                        />
+                      </div>
 
-                    <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={sendItemToShop}>In den Shop</button>
-                  </>
-                }
+                      <button 
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" 
+                        onClick={sendItemToShop}
+                      >
+                        In den Shop
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
               </form>
               </div>
             </div>

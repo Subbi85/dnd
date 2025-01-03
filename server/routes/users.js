@@ -2,11 +2,13 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/Users");
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+
 
 // Neue Benutzer anlegen
 router.post("/", async (req, res) => {
     try {
-      const { username, password, gold, inventory, role } = req.body;
+      const { username, userId, password, role } = req.body;
   
       // Überprüfen, ob der Benutzername bereits existiert
       const existingUser = await User.findOne({ username });
@@ -17,9 +19,8 @@ router.post("/", async (req, res) => {
       // Einen neuen Benutzer erstellen
       const newUser = new User({
         username,
-        password, 
-        gold: gold || 100,
-        inventory: inventory || [],
+        userId,
+        password,
         role: role || 'player'
       });
   
@@ -27,7 +28,7 @@ router.post("/", async (req, res) => {
       const savedUser = await newUser.save();
   
       // Erfolgsantwort
-      res.status(201).json(savedUser);
+      res.status(200).json(savedUser);
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Fehler beim Anlegen des Benutzers" });
@@ -43,6 +44,52 @@ router.get("/", async (req, res) => {
       console.error(err);
       res.status(500).json({ error: "Fehler beim Abrufen der Benutzer" });
     }
+});
+
+// Einen Benutzer anzeigen
+router.get("/:userId", async (req, res) => {
+  try {
+    const user = await User.findOne({ userId: req.params.userId }); 
+    if (!user) {
+      return res.status(404).json({ error: "Benutzer nicht gefunden" });
+    }
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Fehler beim Abrufen des Benutzers" });
+  }
+});
+
+//Password ändern
+router.put("/:id/change-password", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { password, passwortCheck } = req.body;
+
+    if (!password || password.length < 6) {
+      return res.status(400).json({ error: "Password must be at least 6 characters long" });
+    }
+    if (password !== passwortCheck) {
+      return res.status(400).json({ error: "Passwords do not match" });
+    }
+
+    const user = await User.findOne({ userId: id });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "An error occurred while changing the password" });
+  }
 });
 
 // Nutzer löschen
