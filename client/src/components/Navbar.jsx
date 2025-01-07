@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import HeroSlider from './HeroSlider';
 
+//Components
 import Login from '../components/Login'
+import CharactersSelect from './CharactersSelect';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -25,12 +27,6 @@ const Navbar = () => {
                 <Login />
               </span>
             <div className="flex items-center lg:order-2">
-              <a
-                href="#"
-                className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
-              >
-                Account anlegen
-              </a>
               <button
                 type="button"
                 className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
@@ -107,14 +103,14 @@ const Navbar = () => {
                     className="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"
                     aria-current="page"
                   >
-                    Kompendium
+                    Kompendium 
                   </Link>
                 </li>
               </ul>
             </div>
           </div>
         </nav>
-
+        <CharactersSelect />
         <HeroSlider />
       </header>
     </>

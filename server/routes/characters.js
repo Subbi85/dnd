@@ -45,6 +45,21 @@ router.get("/", async (req, res) => {
   }
 });
 
+//Character suchen per id
+router.get("/:id", async (req, res) => {
+  try {
+    const character = await Character.findById(req.params.id);
+    if (!character) {
+      return res.status(404).json({ error: "Charakter nicht gefunden" });
+    }
+    res.status(200).json({ message: "Charakter erfolgreich abgerufen", character });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Ein Fehler ist aufgetreten" });
+  }
+});
+
 //Character löschen
 router.delete("/:id", async (req, res) => {
   try {
@@ -59,5 +74,34 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Ein Fehler ist aufgetreten" });
   }
 });
+
+// Charakter-Inventar aktualisieren
+router.put("/:id/inventory", async (req, res) => {
+  try {
+    const { items } = req.body;
+
+    if (!items || !Array.isArray(items)) {
+      return res.status(400).json({ error: "Kein gültiges Inventar angegeben" });
+    }
+
+    const character = await Character.findById(req.params.id);
+    if (!character) {
+      return res.status(404).json({ error: "Charakter nicht gefunden" });
+    }
+
+    character.inventory = character.inventory.concat(items);
+
+    await character.save();
+
+    res.status(200).json({
+      message: "Inventar erfolgreich aktualisiert",
+      character,
+    });
+  } catch (error) {
+    console.error("Fehler beim Aktualisieren des Inventars:", error);
+    res.status(500).json({ error: "Ein Fehler ist aufgetreten" });
+  }
+});
+
 
 module.exports = router;

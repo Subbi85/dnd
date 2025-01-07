@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useAppContext } from './AppContext';
+import axios from 'axios';
+
+//Icons
 import { AiOutlineDelete } from "react-icons/ai";
 
-
 const ShopSummary = ({ shoppingCardItems, setShoppingCardItems }) => {
+  const { chosenCharacter } = useAppContext();
   const totalPrice = shoppingCardItems.reduce((sum, item) => sum + item.price, 0);
   const [gold, setGold] = useState(100000);
   const rest = gold - totalPrice;
+
+  console.log('Dein Character:', chosenCharacter);
 
   //Item aus dem Warenkorb entfernen
   const deleteFromShoppingCard = (itemToRemove) => {
@@ -16,16 +22,34 @@ const ShopSummary = ({ shoppingCardItems, setShoppingCardItems }) => {
 
   useEffect(() => { }, []);
 
-  //Kauf eines Items
-  const handlePayment = (data) => {
-    console.log(data);
-    if (rest >= 0) {
-      setGold(rest);
-      setShoppingCardItems([]);
-    } else {
-      alert('Nicht genügend Gold!');
-    }
+// Kauf von Items
+const handlePayment = async (data) => {
+  if (!chosenCharacter) {
+    alert('Kein Charakter ausgewählt!');
+    return;
+  }
+
+  const updatedData = {
+    items:  [...data],
+    name: chosenCharacter.name,
+    id: chosenCharacter._id,
   };
+
+  console.log('Items:', updatedData);
+
+  // API-Anfrage ausführen
+  try {
+    const response = await axios.put(
+      `http://localhost:4000/api/characters/${updatedData.id}/inventory`,
+      updatedData
+    );
+
+    setShoppingCardItems([]);
+
+  } catch (err) {
+    console.error('Fehler beim Kauf:', err.message);
+  }
+};
 
   return (
     <div className="mx-auto mt-6 max-w-4xl flex-1 space-y-6 lg:mt-0 lg:w-full">
@@ -54,11 +78,11 @@ const ShopSummary = ({ shoppingCardItems, setShoppingCardItems }) => {
             <dd className="text-base font-medium text-gray-900 dark:text-white">{totalPrice.toLocaleString('de-DE')} G</dd>
           </dl>
           <dl className="flex items-center justify-between gap-4">
-            <dt className="text-base font-normal text-gray-500 dark:text-gray-400">Aktueller Goldstand</dt>
+            <dt className="text-base font-normal text-gray-500 dark:text-gray-400">aktueller Goldstand</dt>
             <dd className="text-base font-medium text-green-600">{gold.toLocaleString('de-DE')} G</dd>
           </dl>
           <dl className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
-            <dt className="text-base font-bold text-gray-900 dark:text-white">Dein restliches Gold</dt>
+            <dt className="text-base font-bold text-gray-900 dark:text-white">{chosenCharacter.name} restliches Gold</dt>
             <dd
               className={`text-base font-bold ${
                 rest < 0 ? 'text-red-600' : 'text-gray-900 dark:text-white'

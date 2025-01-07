@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const SpellSearch = () => {
+const Monstersearch = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -173,4 +173,4 @@ const SpellSearch = () => {
   );
 };
 
-export default SpellSearch;
+export default Monstersearch;

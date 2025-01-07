@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { AppProvider } from "./AppContext";
 
 import { AiOutlineDelete } from "react-icons/ai";
 
@@ -106,9 +107,6 @@ const App = () => {
     setError("");
     try {
       const response = await axios.get("http://localhost:4000/api/characters");
-
-
-      console.log(response.data);
       setCharacters(
         Array.isArray(response.data.characters) ? response.data.characters : []
       ); 
@@ -123,7 +121,6 @@ const App = () => {
   const deleteCharacter = async (character) => {
     try {
       const response = await axios.delete(`http://localhost:4000/api/characters/${character._id}`);
-      console.log(response.data);
       fetchCharacters();
     } catch (err) {
       console.error("Fehler beim Löschen des Charakters:", err);

@@ -11,22 +11,22 @@ const Login = () => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Beim Laden der Seite wird geprüft, ob Benutzerdaten in localStorage gespeichert sind
   useEffect(() => {
     const userData = localStorage.getItem("userData");
-    console.log("Gefundene Daten in localStorage:", userData);
     if (userData) {
       try {
         const parsedData = JSON.parse(userData);
-        console.log("loggedInUser gesetzt:", parsedData);
-
-        setLoggedInUser(parsedData);
+        if (parsedData.user && parsedData.user.username && parsedData.user.id) {
+          setLoggedInUser(parsedData.user);
+        } else {
+          localStorage.removeItem("userData");
+        }
       } catch (err) {
-        console.error("Fehler beim Parsen von userData:", err);
+        localStorage.removeItem("userData"); 
       }
     }
   }, []);
-
+  
   // Login-Handler
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -44,17 +44,25 @@ const Login = () => {
         username,
         password,
       });
-      const userData = response.data;
-      localStorage.setItem("userData", JSON.stringify(userData));
-      setLoggedInUser(userData);
+  
+        const userData = response.data; 
+        if (userData && userData.user) {
+        localStorage.setItem("userData", JSON.stringify(userData)); 
+        setLoggedInUser(userData.user); 
+      } else {
+        setErrorMessage("Ungültige Antwort vom Server.");
+      }
     } catch (err) {
-      console.error("Login Error:", err);
-      setErrorMessage("Ungültiger Benutzername oder Passwort.");
+      if (err.response && err.response.status === 401) {
+        setErrorMessage("Ungültiger Benutzername oder Passwort.");
+      } else {
+        setErrorMessage("Es ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.");
+      }
     } finally {
       setLoading(false);
     }
   };
-
+  
   // Logout-Handler
   const handleLogout = () => {
     localStorage.removeItem("userData");
@@ -65,10 +73,16 @@ const Login = () => {
     <div>
       {loggedInUser ? (
         <div className="flex flex-row">
-          <p>Willkommen, {loggedInUser.user.username}!</p>
-          <p>{loggedInUser.user.gold} G</p>
-          {/* Weitere Benutzerdaten hier anzeigen, falls benötigt */}
-          <button onClick={handleLogout}><TbLogout2 size={20} /></button>
+          Willkommen, 
+          <span className={`
+            ${loggedInUser.role === 'admin' ? 'text-red-500' : ''} 
+            ${loggedInUser.role === 'player' ? 'text-blue-500' : ''} 
+          `}>
+            {loggedInUser.username}
+          </span>!
+          <button onClick={handleLogout}>
+            <TbLogout2 size={20} />
+          </button>
         </div>
       ) : (
         <form onSubmit={handleLogin}>
@@ -78,7 +92,7 @@ const Login = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
                 type="text"
-                placeholder=""
+                autoComplete="username"
                 name="username"
                 id="username"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -86,7 +100,7 @@ const Login = () => {
               />
               <label
                 htmlFor="username"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Benutzername
               </label>
@@ -97,7 +111,7 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 type="password"
-                placeholder=""
+                autoComplete="current-password"
                 name="password"
                 id="password"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -105,17 +119,21 @@ const Login = () => {
               />
               <label
                 htmlFor="password"
-                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
               >
                 Passwort
               </label>
             </div>
 
-            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-            <button 
-              type="submit" 
-              disabled={loading} 
-              className={`flex items-center justify-center ${loading ? 'bg-gray-400' : 'bg-blue-500'}`}
+            {errorMessage && (
+              <div className="flex items-center text-red-500 p-2 bg-red-100 border border-red-400 rounded">
+                <span>{errorMessage}</span>
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={loading}
+              className={`flex items-center justify-center ${loading ? "bg-gray-400" : "bg-blue-500"}`}
             >
               {loading ? "Einloggen..." : <TbLogin2 size={20} />}
             </button>
