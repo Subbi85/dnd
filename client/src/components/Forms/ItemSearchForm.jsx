@@ -150,8 +150,6 @@ const MagicItemSearch = () => {
                     <p><strong>Seltenheit:</strong></p>{selectedItem.rarity.name}
                     <p>{selectedItem.id}</p>
                   </ul>
-
-
                     <>
                       <div style={{ marginBottom: "10px" }}>
                         <label>Price: </label>

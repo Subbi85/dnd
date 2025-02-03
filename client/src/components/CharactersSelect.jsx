@@ -21,9 +21,12 @@ const CharactersSelect = () => {
     const selectedCharacter = characters.find(
       (character) => character.name === e.target.value
     );
-    setChosenCharacter(selectedCharacter); // Kontext aktualisieren
-    setLocalChosenCharacter(e.target.value); // Lokalen Zustand aktualisieren
+    setChosenCharacter(selectedCharacter); 
+    setLocalChosenCharacter(e.target.value);
+    localStorage.removeItem("chosenCharacter");
     localStorage.setItem("chosenCharacter", JSON.stringify(selectedCharacter));
+
+    window.location.reload();
   };
 
   if (!loggedInUser) {

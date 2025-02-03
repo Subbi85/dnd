@@ -10,24 +10,24 @@ import MonsterSearch from "./Forms/MonsterSearchForm";
 import SpellSearch from "./Forms/SpellSearchForm";
 
 const TabsComponent = () => {
-  const [activeTab, setActiveTab] = useState("Profile");
+  const [activeTab, setActiveTab] = useState("Monster");
 
   const tabs = [
-    { name: "Items", icon: GiTemplarEye },
     { name: "Monster", icon: SiRedragon },
     { name: "Zauber", icon: GiMagicPortal },
+    { name: "Items", icon: GiTemplarEye }
   ];
 
   const renderContent = () => {
     switch (activeTab) {
-      case "Items":
-        return <MagicItemSearch />;
       case "Monster":
         return <MonsterSearch />;
       case "Zauber":
         return <SpellSearch />;
+      case "Items":
+        return <MagicItemSearch />;
       default:
-        return <p>No content available for this tab.</p>;
+        return <p>Bitte auf einen Tab drücken</p>;
     }
   };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const Monstersearch = () => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("mimic");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

@@ -35,8 +35,6 @@ const handlePayment = async (data) => {
     id: chosenCharacter._id,
   };
 
-  console.log('Items:', updatedData);
-
   // API-Anfrage ausführen
   try {
     const response = await axios.put(

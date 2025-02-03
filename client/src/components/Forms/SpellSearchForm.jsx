@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const SpellSearch = () => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("fire");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +35,7 @@ const SpellSearch = () => {
 
     const delayDebounceFn = setTimeout(() => {
       fetchResults();
-    }, 300); // Debounce delay
+    }, 300); 
 
     return () => clearTimeout(delayDebounceFn);
   }, [query]);
@@ -56,12 +56,6 @@ const SpellSearch = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getSpellImage = (spellName) => {
-    // Format the spell name for the API image endpoint
-    const formattedName = spellName.toLowerCase().replace(/\s+/g, "-"); // Replace spaces with hyphens
-    return `https://www.dnd5eapi.co/api/images/spells/${formattedName}.png`;
   };
 
   return (
@@ -95,11 +89,6 @@ const SpellSearch = () => {
               }}
               onClick={() => fetchSpellDetails(spell)}
             >
-              <img
-                src={getSpellImage(spell.name)}
-                alt={spell.name}
-                style={{ width: "100%", borderRadius: "4px", marginBottom: "10px" }}
-              />
               <h3 style={{ margin: "0 0 10px" }}>{spell.name}</h3>
               <p style={{ fontSize: "14px", color: "#666" }}>Click for details</p>
             </div>
@@ -120,11 +109,6 @@ const SpellSearch = () => {
           }}
         >
           <h2>{selectedSpell.name}</h2>
-          <img
-            src={getSpellImage(selectedSpell.name)}
-            alt={selectedSpell.name}
-            style={{ width: "200px", borderRadius: "4px", marginBottom: "10px" }}
-          />
           <p>
             <strong>Level:</strong> {selectedSpell.level}
           </p>

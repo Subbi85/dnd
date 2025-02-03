@@ -4,7 +4,7 @@ const Character = require("../models/Character");
 
 //Neuen Character erstellen
 router.post("/", async (req, res) => {
-    console.log(req.body)
+  console.log(req.body);
 
   try {
     const { name, class: charClass, race, attributes, username, userId, desc } = req.body;
@@ -12,6 +12,7 @@ router.post("/", async (req, res) => {
     if (!name || !charClass || !username) {
       return res.status(400).json({ error: "Name, class, and username are required." });
     }
+
     const newCharacter = new Character({
       name,
       class: charClass,
@@ -24,10 +25,40 @@ router.post("/", async (req, res) => {
 
     await newCharacter.save();
 
-    res.status(200).json({ message: "Charakter erfolgreich übermittelt!", character: newCharacter });
+    res.status(200).json({ 
+      message: "Charakter erfolgreich übermittelt!", 
+      character: {
+        id: newCharacter._id,
+        name: newCharacter.name,
+        class: newCharacter.class,
+        race: newCharacter.race,
+        attributes: newCharacter.attributes,
+        desc: newCharacter.desc,
+        username: newCharacter.username,
+        userId: newCharacter.userid
+      }
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "An error occurred while creating the character." });
+  }
+});
+
+//Character suchen per id
+router.get("/:id", async (req, res) => {
+  try {
+    const character = await Character.findById(req.params.id);
+
+    console.log(character)
+
+    if (!character) {
+      return res.status(404).json({ error: "Charakter nicht gefunden" });
+    }
+    res.status(200).json({ message: "Charakter erfolgreich abgerufen", character });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Ein Fehler ist aufgetreten" });
   }
 });
 
@@ -39,21 +70,6 @@ router.get("/", async (req, res) => {
       return res.status(404).json({ message: "Keine Charaktere gefunden" });
     }
     res.status(200).json({ message: "Charaktere erfolgreich abgerufen", characters });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Ein Fehler ist aufgetreten" });
-  }
-});
-
-//Character suchen per id
-router.get("/:id", async (req, res) => {
-  try {
-    const character = await Character.findById(req.params.id);
-    if (!character) {
-      return res.status(404).json({ error: "Charakter nicht gefunden" });
-    }
-    res.status(200).json({ message: "Charakter erfolgreich abgerufen", character });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Ein Fehler ist aufgetreten" });

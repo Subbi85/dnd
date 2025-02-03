@@ -90,11 +90,11 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link
-                    to="/inventar"
+                    to="/char"
                     className="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"
                     aria-current="page"
                   >
-                    Inventar
+                    Dein Character
                   </Link>
                 </li>
                 <li>
@@ -104,6 +104,15 @@ const Navbar = () => {
                     aria-current="page"
                   >
                     Kompendium 
+                  </Link>
+                </li>
+                <li>
+                <Link
+                    to="/admin"
+                    className="block py-2 pr-4 pl-3 text-white rounded bg-primary-700 lg:bg-transparent lg:text-primary-700 lg:p-0 dark:text-white"
+                    aria-current="page"
+                  >
+                    Admin 
                   </Link>
                 </li>
               </ul>

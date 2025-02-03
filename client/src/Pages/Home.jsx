@@ -14,7 +14,7 @@ const Home = () => {
         <div className="bg-gray-800 p-4 rounded col-span-2 flex flex-row">
           <MessageDisplay />
         </div>
-        <div className="bg-green-500 text-white p-4 rounded">
+        <div className="bg-gray-800 text-white p-4 rounded">
           <CharacterModal />
         </div>
         <div className="bg-red-500 text-white p-4 rounded">Neueste Items</div>
